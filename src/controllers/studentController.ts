@@ -125,6 +125,8 @@ export const getStudents = catchErrorAsync(async (req : CustomRequest,resp:Respo
 export const createStudentId = catchErrorAsync(async (req : CustomRequest,resp:Response,next:NextFunction)=>{
     if(req.teacher){
        const {rollNumber} = req.body;
+       const check = await UserModel.findOne({rollNumber});
+       if(check) return next(new ErrorHandler("Please select valid rollNumber.",400));
         const studentId = await UserModel.create({rollNumber,password:rollNumber,role:"student"});
         resp.status(201).json({
             success : true,

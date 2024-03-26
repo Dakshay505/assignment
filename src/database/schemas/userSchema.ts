@@ -3,7 +3,7 @@ import UserDocument from "../Entities/UserDocument";
 import bcrypt from "bcrypt";
 
 const userSchema = new Schema<UserDocument>({
-  rollNumber: { type: String, unique: true },
+  rollNumber: { type: String },
   name: { type: String},
   email: {
     type: String,

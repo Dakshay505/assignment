@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = require("mongoose");
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const userSchema = new mongoose_1.Schema({
-    rollNumber: { type: String, unique: true },
+    rollNumber: { type: String },
     name: { type: String },
     email: {
         type: String,
