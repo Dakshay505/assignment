@@ -30,6 +30,16 @@ eval("\nvar __importDefault = (this && this.__importDefault) || function (mod) {
 
 /***/ }),
 
+/***/ "./src/controllers/checkController.ts":
+/*!********************************************!*\
+  !*** ./src/controllers/checkController.ts ***!
+  \********************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+eval("\nvar __importDefault = (this && this.__importDefault) || function (mod) {\n    return (mod && mod.__esModule) ? mod : { \"default\": mod };\n};\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nexports.performTransaction = void 0;\nconst mongoose_1 = __importDefault(__webpack_require__(/*! mongoose */ \"mongoose\"));\nconst userModel_1 = __importDefault(__webpack_require__(/*! @src/database/models/userModel */ \"./src/database/models/userModel.ts\"));\nconst orderModel_1 = __webpack_require__(/*! @src/database/models/orderModel */ \"./src/database/models/orderModel.ts\");\nconst performTransaction = async () => {\n    const session = await mongoose_1.default.startSession();\n    session.startTransaction();\n    try {\n        // Example operation 1: Insert a document into the users collection\n        const newUser = new userModel_1.default({ name: 'John willy', email: 'jo@example.com', role: \"teacher\", password: \"1\" });\n        const userInsertResult = await newUser.save({ session });\n        // Example operation 2: Insert a document into the orders collection\n        const newOrder = new orderModel_1.OrderModel({ userId: userInsertResult._id, product: 'Laptop12', amount: 1200 });\n        const orderInsertResult = await newOrder.save({ session });\n        // Commit the transaction\n        // const user1 = await UserModel.create({name: 'John Dill', email: 'n@example.com'});\n        await session.commitTransaction();\n        console.log('Transaction committed.');\n    }\n    catch (error) {\n        console.error('Transaction aborted due to an error:', error);\n        // Abort the transaction in case of an error\n        await session.abortTransaction();\n    }\n    finally {\n        session.endSession();\n    }\n};\nexports.performTransaction = performTransaction;\n\n\n//# sourceURL=webpack://taskBackend/./src/controllers/checkController.ts?");
+
+/***/ }),
+
 /***/ "./src/controllers/studentController.ts":
 /*!**********************************************!*\
   !*** ./src/controllers/studentController.ts ***!
@@ -47,6 +57,26 @@ eval("\nvar __importDefault = (this && this.__importDefault) || function (mod) {
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 eval("\nvar __importDefault = (this && this.__importDefault) || function (mod) {\n    return (mod && mod.__esModule) ? mod : { \"default\": mod };\n};\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nexports.connectDB = void 0;\nconst mongoose_1 = __importDefault(__webpack_require__(/*! mongoose */ \"mongoose\"));\nconst connectDB = async () => {\n    try {\n        const connect = await mongoose_1.default.connect(`${process.env.DB_URI}`);\n        console.log(\"DB connected\");\n        return connect;\n    }\n    catch (err) {\n        console.log(err.message);\n    }\n};\nexports.connectDB = connectDB;\n\n\n//# sourceURL=webpack://taskBackend/./src/database/connection/connect.ts?");
+
+/***/ }),
+
+/***/ "./src/database/connection/connectMultiple.ts":
+/*!****************************************************!*\
+  !*** ./src/database/connection/connectMultiple.ts ***!
+  \****************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+eval("\nvar __importDefault = (this && this.__importDefault) || function (mod) {\n    return (mod && mod.__esModule) ? mod : { \"default\": mod };\n};\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nexports.ProductModel = exports.NewUserModel = exports.db2 = exports.db1 = void 0;\nconst mongoose_1 = __importDefault(__webpack_require__(/*! mongoose */ \"mongoose\"));\nexports.db1 = mongoose_1.default.createConnection('mongodb://localhost:27017/database1', {});\nexports.db2 = mongoose_1.default.createConnection('mongodb://localhost:27017/database2', {});\nconst newUserSchema = new mongoose_1.default.Schema({\n    name: String,\n    email: String,\n});\nexports.NewUserModel = exports.db1.model('newUser', newUserSchema);\nconst productSchema = new mongoose_1.default.Schema({\n    name: String,\n    price: Number,\n});\nexports.ProductModel = exports.db2.model('Product', productSchema);\n\n\n//# sourceURL=webpack://taskBackend/./src/database/connection/connectMultiple.ts?");
+
+/***/ }),
+
+/***/ "./src/database/models/orderModel.ts":
+/*!*******************************************!*\
+  !*** ./src/database/models/orderModel.ts ***!
+  \*******************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+eval("\nvar __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {\n    if (k2 === undefined) k2 = k;\n    var desc = Object.getOwnPropertyDescriptor(m, k);\n    if (!desc || (\"get\" in desc ? !m.__esModule : desc.writable || desc.configurable)) {\n      desc = { enumerable: true, get: function() { return m[k]; } };\n    }\n    Object.defineProperty(o, k2, desc);\n}) : (function(o, m, k, k2) {\n    if (k2 === undefined) k2 = k;\n    o[k2] = m[k];\n}));\nvar __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {\n    Object.defineProperty(o, \"default\", { enumerable: true, value: v });\n}) : function(o, v) {\n    o[\"default\"] = v;\n});\nvar __importStar = (this && this.__importStar) || function (mod) {\n    if (mod && mod.__esModule) return mod;\n    var result = {};\n    if (mod != null) for (var k in mod) if (k !== \"default\" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);\n    __setModuleDefault(result, mod);\n    return result;\n};\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nexports.OrderModel = void 0;\nconst mongoose_1 = __importStar(__webpack_require__(/*! mongoose */ \"mongoose\"));\nconst OrderSchema = new mongoose_1.Schema({\n    userId: { type: mongoose_1.Schema.Types.ObjectId, required: true, ref: 'User' },\n    product: { type: String, required: true },\n    amount: { type: Number, required: true },\n});\nexports.OrderModel = mongoose_1.default.model('Order', OrderSchema);\n\n\n//# sourceURL=webpack://taskBackend/./src/database/models/orderModel.ts?");
 
 /***/ }),
 
@@ -96,7 +126,7 @@ eval("\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nexpo
   \**********************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
-eval("\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nconst authController_1 = __webpack_require__(/*! @src/controllers/authController */ \"./src/controllers/authController.ts\");\nconst auth_1 = __webpack_require__(/*! @src/middleware/auth */ \"./src/middleware/auth.ts\");\nconst express_1 = __webpack_require__(/*! express */ \"express\");\nconst authRouter = (0, express_1.Router)();\nauthRouter.route(\"/login\").post(authController_1.Login);\nauthRouter.route(\"/register\").post(authController_1.RegisterTeacher);\nauthRouter.route(\"/getUser\").get(auth_1.isAuthenticated, authController_1.getUser);\nauthRouter.route(\"/logout\").get(authController_1.logout);\nexports[\"default\"] = authRouter;\n\n\n//# sourceURL=webpack://taskBackend/./src/routes/authRoutes.ts?");
+eval("\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nconst authController_1 = __webpack_require__(/*! @src/controllers/authController */ \"./src/controllers/authController.ts\");\nconst checkController_1 = __webpack_require__(/*! @src/controllers/checkController */ \"./src/controllers/checkController.ts\");\nconst connectMultiple_1 = __webpack_require__(/*! @src/database/connection/connectMultiple */ \"./src/database/connection/connectMultiple.ts\");\nconst auth_1 = __webpack_require__(/*! @src/middleware/auth */ \"./src/middleware/auth.ts\");\nconst express_1 = __webpack_require__(/*! express */ \"express\");\nconst authRouter = (0, express_1.Router)();\nauthRouter.route('/perform-transaction').get(async (req, res) => {\n    try {\n        console.log(\"check\");\n        await (0, checkController_1.performTransaction)();\n        res.send('Transaction performed successfully');\n    }\n    catch (error) {\n        res.status(500).send('Error performing transaction');\n    }\n});\nauthRouter.route(\"/create\").get(async (req, res, next) => {\n    try {\n        const getUsers = await connectMultiple_1.NewUserModel.find().lean();\n        res.status(201).send(getUsers);\n    }\n    catch (error) {\n        res.status(400).send(error);\n    }\n});\nauthRouter.route(\"/login\").post(authController_1.Login);\nauthRouter.route(\"/register\").post(authController_1.RegisterTeacher);\nauthRouter.route(\"/getUser\").get(auth_1.isAuthenticated, authController_1.getUser);\nauthRouter.route(\"/logout\").get(authController_1.logout);\nexports[\"default\"] = authRouter;\n\n\n//# sourceURL=webpack://taskBackend/./src/routes/authRoutes.ts?");
 
 /***/ }),
 

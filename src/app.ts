@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Request, Response } from "express";
 import path from "path";
 import cors from "cors";
 import cookieParser from "cookie-parser"
@@ -6,6 +6,7 @@ import dotenv from "dotenv";
 import { errorMiddleware } from "./middleware/errorHandler";
 import authRouter from "./routes/authRoutes";
 import studentRouter from "./routes/studentRouter";
+import { performTransaction } from "./controllers/checkController";
 
 const app = express();
 dotenv.config({path:path.join(__dirname, "..", "public/.env")})
@@ -30,6 +31,7 @@ app.use(
     })
 );
 app.use(cookieParser());
+
 
 app.use("/api/v1/auth",authRouter);
 app.use("/api/v1/student",studentRouter);
